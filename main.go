@@ -3,10 +3,12 @@ package main
 import (
 	"context"
 	"fmt"
+	"os"
 
 	v1 "k8s.io/api/apps/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/client-go/kubernetes"
+	_ "k8s.io/client-go/plugin/pkg/client/auth"
 	ctrl "sigs.k8s.io/controller-runtime"
 )
 
@@ -14,8 +16,7 @@ func main() {
 	ctx := context.Background()
 	config := ctrl.GetConfigOrDie()
 	clientset := kubernetes.NewForConfigOrDie(config)
-
-	namespace := "default"
+	namespace := os.Args[1]
 	items, err := GetDeployments(clientset, ctx, namespace)
 	if err != nil {
 		fmt.Println(err)
